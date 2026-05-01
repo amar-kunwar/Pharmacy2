@@ -10,7 +10,7 @@ export default function Sidebar({ view, setView, collapsed, pharmacyName, userEm
       <div className="sidebar-logo">
         <div className="logo-icon">⚕</div>
         <div className="logo-text">
-          <span className="logo-name">National Pharmacy</span>
+          <span className="logo-name">National Medical Store</span>
           <span className="logo-tagline">Medicine Billing</span>
         </div>
       </div>
@@ -40,7 +40,7 @@ export default function Sidebar({ view, setView, collapsed, pharmacyName, userEm
       </nav>
 
       <div className="sidebar-footer">
-        <div className="pharmacy-info">{pharmacyName || 'National Pharmacy'}</div>
+        <div className="pharmacy-info">{pharmacyName || 'National Medical Store'}</div>
         <div className="user-email">{userEmail}</div>
         <button className="btn-logout" onClick={handleLogout}>
           <LogOut size={16} />

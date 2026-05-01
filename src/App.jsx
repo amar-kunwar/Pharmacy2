@@ -16,9 +16,9 @@ export default function App() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [toast, setToast] = useState({ show: false, msg: '', type: 'success' });
   const [userSettings, setUserSettings] = useState({
-    pharmacyName: 'National Pharmacy',
-    phone: '7303282203',
-    address: 'Okhla Delhi',
+    pharmacyName: 'National Medical Store',
+    phone: '7303292203',
+    address: 'Jamia Nagar Okhla New Delhi',
     billCounter: 1000
   });
   const [bills, setBills] = useState([]);
@@ -73,16 +73,16 @@ export default function App() {
     } else if (error && error.code === 'PGRST116') {
       const defaults = {
         user_id: session.user.id,
-        pharmacy_name: 'National Pharmacy',
-        phone: '7303282203',
-        address: 'Okhla Delhi',
+        pharmacy_name: 'National Medical Store',
+        phone: '7303292203',
+        address: 'Jamia Nagar Okhla New Delhi',
         bill_counter: 1000
       };
       await supabase.from('settings').insert(defaults);
       setUserSettings({ 
-        pharmacyName: 'National Pharmacy', 
-        phone: '7303282203',
-        address: 'Okhla Delhi',
+        pharmacyName: 'National Medical Store', 
+        phone: '7303292203',
+        address: 'Jamia Nagar Okhla New Delhi',
         billCounter: 1000 
       });
     }
