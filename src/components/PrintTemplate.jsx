@@ -28,20 +28,19 @@ export default function PrintTemplate({ data, settings }) {
       <div className="print-type">CASH MEMO / INVOICE</div>
       
       <div className="print-header">
-        <h1>National Pharmacy</h1>
-        <p>
-          {settings?.address || 'Okhla Delhi'} 
-          {settings?.phone || '7303282203' ? ` | 📞 ${settings?.phone || '7303282203'}` : ''}
-        </p>
-        <div className="print-licenses">
-          {settings?.gstin && <span>GSTIN: {settings.gstin}</span>}
-          {settings?.dl && <span>DL No: {settings.dl}</span>}
-        </div>
+        <h1>National Medical Store</h1>
+        <p>DL No. - RLF21DL2024001871, RLF20DL2024001861</p>
+        <p>Jamia Nagar Okhla New Delhi, Mobile Number 7303292203</p>
+        {settings?.gstin && (
+          <div className="print-licenses">
+            <span>GSTIN: {settings.gstin}</span>
+          </div>
+        )}
       </div>
 
       <div className="print-meta-grid">
         <div className="meta-left">
-          <div className="meta-row"><strong>Patient:</strong> {data.customer}</div>
+          <div className="meta-row"><strong>Patient Name:</strong> {data.customer}</div>
           {data.phone && <div className="meta-row"><strong>Phone:</strong> {data.phone}</div>}
           {data.age && <div className="meta-row"><strong>Age/Sex:</strong> {data.age}</div>}
           {data.address && <div className="meta-row"><strong>Address:</strong> {data.address}</div>}
@@ -49,7 +48,8 @@ export default function PrintTemplate({ data, settings }) {
         <div className="meta-right">
           <div className="meta-row"><strong>Bill No:</strong> {data.bill_no}</div>
           <div className="meta-row"><strong>Date:</strong> {new Date(data.date).toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'numeric' })}</div>
-          {data.doctor && <div className="meta-row"><strong>Dr. Name:</strong> {data.doctor}</div>}
+          {data.doctor && <div className="meta-row"><strong>Doctor Name:</strong> {data.doctor}</div>}
+          {data.doctor_address && <div className="meta-row"><strong>Doctor Address:</strong> {data.doctor_address}</div>}
         </div>
       </div>
 
@@ -126,7 +126,7 @@ export default function PrintTemplate({ data, settings }) {
           <div className="auth-sign">
             <div className="sign-space"></div>
             <p>Authorized Signatory</p>
-            <p><strong>National Pharmacy</strong></p>
+            <p><strong>National Medical Store</strong></p>
           </div>
         </div>
       </div>
