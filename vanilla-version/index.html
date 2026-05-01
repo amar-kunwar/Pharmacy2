@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PharmaBill – Medicine Billing System</title>
+  <meta name="description" content="Modern pharmacy billing system to create, save, and print medicine bills with ease." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <!-- Supabase JS CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+  <!-- ======================== LOGIN SCREEN ======================== -->
+  <div id="login-screen" class="login-screen">
+    <div class="login-card">
+      <div class="login-logo">
+        <div class="logo-icon" style="width:56px;height:56px;font-size:28px;margin:0 auto 12px;">⚕</div>
+        <h1>PharmaBill</h1>
+        <p>Sign in to manage your pharmacy billing</p>
+      </div>
+
+      <!-- Tabs -->
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="tab-login"  onclick="setAuthTab('login')">Log In</button>
+        <button class="auth-tab"        id="tab-signup" onclick="setAuthTab('signup')">Sign Up</button>
+      </div>
+
+      <!-- Error / success message -->
+      <div class="auth-error" id="auth-error"></div>
+
+      <!-- Login Form -->
+      <div id="login-form" class="auth-form">
+        <div class="form-group">
+          <label for="login-email">Email</label>
+          <input type="email" id="login-email" placeholder="you@example.com" autocomplete="email" />
+        </div>
+        <div class="form-group">
+          <label for="login-password">Password</label>
+          <input type="password" id="login-password" placeholder="Your password" autocomplete="current-password" />
+        </div>
+        <button class="btn btn-primary" id="btn-login" onclick="doLogin()" style="width:100%;justify-content:center">Log In</button>
+      </div>
+
+      <!-- Signup Form -->
+      <div id="signup-form" class="auth-form" style="display:none">
+        <div class="form-group">
+          <label for="signup-email">Email</label>
+          <input type="email" id="signup-email" placeholder="you@example.com" autocomplete="email" />
+        </div>
+        <div class="form-group">
+          <label for="signup-password">Password</label>
+          <input type="password" id="signup-password" placeholder="Min 6 characters" autocomplete="new-password" />
+        </div>
+        <div class="form-group">
+          <label for="signup-confirm">Confirm Password</label>
+          <input type="password" id="signup-confirm" placeholder="Repeat password" autocomplete="new-password" />
+        </div>
+        <button class="btn btn-primary" id="btn-signup" onclick="doSignup()" style="width:100%;justify-content:center">Create Account</button>
+      </div>
+
+      <!-- Divider -->
+      <div class="auth-divider"><span>or continue with</span></div>
+
+      <!-- Google SSO -->
+      <button class="btn-google" id="btn-google" onclick="doGoogleLogin()">
+        <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20H24v8h11.3C33.6 33 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3 0 5.7 1.1 7.8 2.9l5.7-5.7C33.9 6.4 29.2 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20c11 0 19.7-8 19.7-20 0-1.3-.1-2.7-.1-4z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.6 15.1 18.9 12 24 12c3 0 5.7 1.1 7.8 2.9l5.7-5.7C33.9 6.4 29.2 4 24 4 16.3 4 9.6 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.8-1.8 13.4-4.7l-6.2-5.2C29.4 35.9 26.8 37 24 37c-5.3 0-9.7-3.6-11.2-8.5l-6.5 5C9.5 40.1 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20H24v8h11.3c-.8 2.2-2.3 4-4.2 5.2l6.2 5.2C40.8 35.2 44 30 44 24c0-1.3-.1-2.7-.4-4z"/></svg>
+        Sign in with Google
+      </button>
+    </div>
+  </div>
+
+  <!-- ======================== APP WRAPPER ======================== -->
+  <div id="app-wrapper" style="display:none;width:100%;min-height:100vh;display:none">
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon">⚕</div>
+      <div class="logo-text">
+        <span class="logo-name">PharmaBill</span>
+        <span class="logo-tagline">Billing System</span>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <button class="nav-item active" id="nav-new-bill" onclick="showView('new-bill')">
+        <span class="nav-icon">📋</span>
+        <span class="nav-label">New Bill</span>
+      </button>
+      <button class="nav-item" id="nav-history" onclick="showView('history')">
+        <span class="nav-icon">🗂️</span>
+        <span class="nav-label">Bill History</span>
+      </button>
+
+      <button class="nav-item" id="nav-settings" onclick="showView('settings')">
+        <span class="nav-icon">⚙️</span>
+        <span class="nav-label">Settings</span>
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="pharmacy-info" id="sidebar-pharmacy-name">My Pharmacy</div>
+      <div class="user-email" id="user-email-display"></div>
+      <button class="btn-logout" onclick="doLogout()">⏻ Log Out</button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+
+    <!-- Header -->
+    <header class="top-header">
+      <div class="header-left">
+        <button class="menu-toggle" onclick="toggleSidebar()" id="menu-toggle-btn">☰</button>
+        <div class="breadcrumb" id="breadcrumb">New Bill</div>
+      </div>
+      <div class="header-right">
+        <div class="header-time" id="header-time"></div>
+        <div class="header-date" id="header-date"></div>
+      </div>
+    </header>
+
+    <!-- ======================== VIEW: NEW BILL ======================== -->
+    <section class="view active" id="view-new-bill">
+      <div class="view-title">
+        <h1>Create New Bill</h1>
+        <p>Fill in customer details and add medicines to generate a bill.</p>
+      </div>
+
+      <!-- Customer Details -->
+      <div class="card" id="customer-card">
+        <div class="card-header">
+          <span class="card-icon">👤</span>
+          <h2>Customer Details</h2>
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="customer-name">Customer Name <span class="required">*</span></label>
+            <input type="text" id="customer-name" placeholder="Enter customer name" autocomplete="off" />
+          </div>
+          <div class="form-group">
+            <label for="customer-phone">Phone Number</label>
+            <input type="tel" id="customer-phone" placeholder="+91 9876543210" />
+          </div>
+          <div class="form-group">
+            <label for="customer-age">Age</label>
+            <input type="number" id="customer-age" placeholder="e.g. 35" min="1" max="120" />
+          </div>
+          <div class="form-group">
+            <label for="bill-date">Bill Date <span class="required">*</span></label>
+            <input type="date" id="bill-date" />
+          </div>
+          <div class="form-group" style="grid-column: 1 / -1">
+            <label for="customer-address">Customer Address</label>
+            <input type="text" id="customer-address" placeholder="House No., Street, City, PIN" />
+          </div>
+          <div class="form-group">
+            <label for="doctor-name">Doctor Name</label>
+            <input type="text" id="doctor-name" placeholder="Dr. Name (optional)" />
+          </div>
+          <div class="form-group">
+            <label for="bill-number">Bill Number</label>
+            <input type="text" id="bill-number" placeholder="Auto-generated" />
+          </div>
+          <div class="form-group" style="grid-column: 1 / -1">
+            <label for="doctor-address">Doctor's Address / Hospital</label>
+            <input type="text" id="doctor-address" placeholder="Clinic / Hospital name and address (optional)" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Medicine Items -->
+      <div class="card" id="items-card">
+        <div class="card-header">
+          <span class="card-icon">💊</span>
+          <h2>Medicine Items</h2>
+        </div>
+
+        <div class="table-wrapper">
+          <table class="items-table" id="items-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Medicine Name</th>
+                <th>Pack</th>
+                <th>Batch No.</th>
+                <th>Expiry Date</th>
+                <th>Qty</th>
+                <th>Unit Price (₹)</th>
+                <th>Discount (%)</th>
+                <th>Total (₹)</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="items-body">
+              <!-- Rows added dynamically -->
+            </tbody>
+          </table>
+        </div>
+
+        <div class="add-item-row">
+          <button class="btn btn-primary" onclick="addMedicineRow()" id="add-item-btn">+ Add Item</button>
+        </div>
+
+
+      </div>
+
+      <!-- Bill Summary -->
+      <div class="bill-summary-container">
+        <div class="bill-notes-card card">
+          <div class="card-header">
+            <span class="card-icon">📝</span>
+            <h2>Notes</h2>
+          </div>
+          <textarea id="bill-notes" placeholder="Add any notes or instructions for the patient..."></textarea>
+        </div>
+
+        <div class="summary-card card">
+          <div class="card-header">
+            <span class="card-icon">🧾</span>
+            <h2>Summary</h2>
+          </div>
+          <div class="summary-row">
+            <span>Subtotal</span>
+            <span id="sum-subtotal">₹0.00</span>
+          </div>
+          <div class="summary-row">
+            <span>Total Discount</span>
+            <span id="sum-discount" class="discount-text">-₹0.00</span>
+          </div>
+          <div class="summary-divider"></div>
+          <div class="summary-row grand-total-row">
+            <span>Grand Total</span>
+            <span id="sum-grand-total">₹0.00</span>
+          </div>
+          <div class="summary-actions">
+            <button class="btn btn-outline" onclick="resetBill()" id="reset-btn">🗑 Reset</button>
+            <button class="btn btn-secondary" onclick="saveBill()" id="save-btn">💾 Save Bill</button>
+            <button class="btn btn-primary" onclick="printBill()" id="print-btn">🖨 Print</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================== VIEW: HISTORY ======================== -->
+    <section class="view" id="view-history">
+      <div class="view-title">
+        <h1>Bill History</h1>
+        <p>View, reprint, or delete your saved bills.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="card-icon">🗂️</span>
+          <h2>Saved Bills</h2>
+          <div class="search-wrapper">
+            <input type="text" id="history-search" placeholder="Search by name or bill no..." oninput="renderHistory()" />
+          </div>
+        </div>
+        <div id="history-list" class="history-list">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </section>
+
+
+
+    <!-- ======================== VIEW: SETTINGS ======================== -->
+    <section class="view" id="view-settings">
+      <div class="view-title">
+        <h1>Settings</h1>
+        <p>Configure your pharmacy details and billing preferences.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="card-icon">🏥</span>
+          <h2>Pharmacy Details</h2>
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="setting-pharmacy-name">Pharmacy Name <span class="required">*</span></label>
+            <input type="text" id="setting-pharmacy-name" placeholder="e.g. HealthCare Pharmacy" />
+          </div>
+          <div class="form-group">
+            <label for="setting-pharmacy-phone">Phone</label>
+            <input type="tel" id="setting-pharmacy-phone" placeholder="+91 9876543210" />
+          </div>
+          <div class="form-group" style="grid-column: 1 / -1">
+            <label for="setting-pharmacy-address">Address</label>
+            <textarea id="setting-pharmacy-address" placeholder="Shop No. 1, Main Street, City - 400001"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="setting-pharmacy-gstin">GSTIN</label>
+            <input type="text" id="setting-pharmacy-gstin" placeholder="e.g. 27AAAAA0000A1Z5" />
+          </div>
+          <div class="form-group">
+            <label for="setting-pharmacy-dl">Drug License No.</label>
+            <input type="text" id="setting-pharmacy-dl" placeholder="e.g. DL-2024-001" />
+          </div>
+          <div class="form-group">
+            <label for="setting-default-gst">Default GST (%)</label>
+            <input type="number" id="setting-default-gst" placeholder="12" min="0" max="100" value="12" />
+          </div>
+        </div>
+        <button class="btn btn-primary" onclick="saveSettings()" id="save-settings-btn" style="margin-top:8px">💾 Save Settings</button>
+      </div>
+
+      <div class="card" style="margin-top:24px">
+        <div class="card-header">
+          <span class="card-icon">🗄️</span>
+          <h2>Data Management</h2>
+        </div>
+        <div class="data-mgmt-row">
+          <div class="data-mgmt-info">
+            <strong>Export All Bills</strong>
+            <p>Download all saved bills as a JSON file for backup.</p>
+          </div>
+          <button class="btn btn-secondary" onclick="exportData()" id="export-btn">📥 Export JSON</button>
+        </div>
+        <div class="data-mgmt-row danger-row">
+          <div class="data-mgmt-info">
+            <strong>Clear All Data</strong>
+            <p>Permanently delete all bills and medicines. Cannot be undone.</p>
+          </div>
+          <button class="btn btn-danger" onclick="clearAllData()" id="clear-data-btn">🗑 Clear Data</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  </div><!-- /#app-wrapper -->
+
+  <!-- ======================== PRINT TEMPLATE ======================== -->
+  <div id="print-area" class="print-area" style="display:none;">
+    <!-- Populated by JS before printing -->
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="toast" id="toast"></div>
+
+  <script src="supabase-client.js"></script>
+  <script src="script.js"></script>
+  <script src="auth.js"></script>
+</body>
+</html>
