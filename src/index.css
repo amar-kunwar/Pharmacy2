@@ -402,13 +402,17 @@ input::placeholder, textarea::placeholder { color: var(--text-3); }
 .print-area { display: none; }
 .print-template-container {
   position: fixed;
-  left: -9999px;
+  left: 0;
   top: 0;
   width: 210mm;
   background: white;
-  z-index: -1;
+  z-index: -1000;
+  pointer-events: none;
 }
-.print-template-container .print-area { display: block !important; }
+.print-template-container .print-area { 
+  display: block !important; 
+  visibility: visible !important;
+}
 
 
 @media print {

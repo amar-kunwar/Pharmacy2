@@ -3,6 +3,9 @@ import html2pdf from 'html2pdf.js';
 
 export const uploadBillPDF = async (billData) => {
   try {
+    // Wait a bit for the DOM to settle
+    await new Promise(resolve => setTimeout(resolve, 800));
+
     const element = document.getElementById('print-area');
     if (!element) {
       console.error('Print area not found');
@@ -13,7 +16,13 @@ export const uploadBillPDF = async (billData) => {
       margin: 0.2,
       filename: `${billData.bill_no}.pdf`,
       image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2, useCORS: true },
+      html2canvas: { 
+        scale: 2, 
+        useCORS: true,
+        letterRendering: true,
+        scrollY: 0,
+        scrollX: 0
+      },
       jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
     };
 
