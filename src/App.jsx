@@ -108,7 +108,11 @@ export default function App() {
     showToast('Bill saved. Generating PDF for cloud storage...', 'info');
     
     // Set print data to render PrintTemplate for PDF capture
-    if (!printData) setPrintData(newBill);
+    // We clear it first to ensure a fresh render even if the data is similar
+    setPrintData(null);
+    setTimeout(() => {
+      setPrintData(newBill);
+    }, 50);
     
     // Wait for render, then upload PDF
     setTimeout(async () => {

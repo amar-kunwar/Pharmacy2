@@ -3,23 +3,25 @@ import html2pdf from 'html2pdf.js';
 
 export const uploadBillPDF = async (billData) => {
   try {
-    // Wait a bit for the DOM to settle
-    await new Promise(resolve => setTimeout(resolve, 800));
+    // Wait for React to finish rendering the template into the DOM
+    await new Promise(resolve => setTimeout(resolve, 1200));
 
     const element = document.getElementById('print-area');
-    if (!element) {
-      console.error('Print area not found');
+    if (!element || element.offsetHeight === 0) {
+      console.error('Print area not found or empty');
       return null;
     }
 
     const opt = {
       margin: 0.2,
       filename: `${billData.bill_no}.pdf`,
-      image: { type: 'jpeg', quality: 0.98 },
+      image: { type: 'jpeg', quality: 1.0 },
       html2canvas: { 
         scale: 2, 
         useCORS: true,
+        logging: false,
         letterRendering: true,
+        windowWidth: 800, // Force a consistent width for capture
         scrollY: 0,
         scrollX: 0
       },
