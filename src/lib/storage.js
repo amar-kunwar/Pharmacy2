@@ -21,9 +21,17 @@ export const uploadBillPDF = async (billData) => {
         useCORS: true,
         logging: false,
         letterRendering: true,
-        windowWidth: 800, // Force a consistent width for capture
-        scrollY: 0,
-        scrollX: 0
+        windowWidth: 1200,
+        onclone: (clonedDoc) => {
+          const el = clonedDoc.getElementById('print-area');
+          if (el) {
+            el.style.display = 'block';
+            el.style.visibility = 'visible';
+            el.style.position = 'relative';
+            el.style.top = '0';
+            el.style.left = '0';
+          }
+        }
       },
       jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
     };

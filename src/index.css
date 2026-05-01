@@ -401,12 +401,12 @@ input::placeholder, textarea::placeholder { color: var(--text-3); }
 /* ===== PRINT AREA ===== */
 .print-area { display: none; }
 .print-template-container {
-  position: fixed;
+  position: absolute;
   left: 0;
-  top: 0;
+  top: 10000px; /* Far below visible area */
   width: 210mm;
   background: white;
-  z-index: -1000;
+  z-index: -1;
   pointer-events: none;
 }
 .print-template-container .print-area { 
