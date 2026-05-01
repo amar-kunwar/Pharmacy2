@@ -49,7 +49,7 @@ export default function Auth() {
       <div className="login-card">
         <div className="login-logo">
           <div className="logo-icon" style={{width:'56px', height:'56px', fontSize:'28px', margin:'0 auto 12px'}}>⚕</div>
-          <h1>National Pharmacy</h1>
+          <h1>National Medical Store</h1>
           <p>Sign in to manage your pharmacy billing</p>
         </div>
 
