@@ -152,7 +152,7 @@ export default function NewBill({ settings, editingBill, onSave, onPrint, showTo
             />
           </div>
           <div className="form-group">
-            <label>Customer Name <span className="required">*</span></label>
+            <label>Patient Name <span className="required">*</span></label>
             <input 
               type="text" 
               placeholder="Full name" 
@@ -191,7 +191,7 @@ export default function NewBill({ settings, editingBill, onSave, onPrint, showTo
             <label>Doctor Name</label>
             <input 
               type="text" 
-              placeholder="Dr. Name" 
+              placeholder="Doctor Name" 
               value={billData.doctor} 
               onChange={(e) => setBillData({...billData, doctor: e.target.value})} 
             />

@@ -18,7 +18,7 @@ export default function App() {
   const [userSettings, setUserSettings] = useState({
     pharmacyName: 'National Medical Store',
     phone: '7303292203',
-    address: 'Jamia Nagar Okhla New Delhi',
+    address: 'A block, Thokar No -7, Jamia Nagar, Okhla New Delhi 110025',
     billCounter: 1000
   });
   const [bills, setBills] = useState([]);
@@ -75,7 +75,7 @@ export default function App() {
         user_id: session.user.id,
         pharmacy_name: 'National Medical Store',
         phone: '7303292203',
-        address: 'Jamia Nagar Okhla New Delhi',
+        address: 'A block, Thokar No -7, Jamia Nagar, Okhla New Delhi 110025',
         bill_counter: 1000
       };
       await supabase.from('settings').insert(defaults);

@@ -28,9 +28,10 @@ export default function PrintTemplate({ data, settings }) {
       <div className="print-type">CASH MEMO / INVOICE</div>
       
       <div className="print-header">
-        <h1>National Medical Store</h1>
+        <h1>{settings?.pharmacyName || "National Medical Store"}</h1>
         <p>DL No. - RLF21DL2024001871, RLF20DL2024001861</p>
-        <p>Jamia Nagar Okhla New Delhi, Mobile Number 7303292203</p>
+        <p>A block, Thokar No -7, Jamia Nagar, Okhla New Delhi 110025</p>
+        <p>Email: nationalmstoreonline@gmail.com | Mobile Number 7303292203</p>
         {settings?.gstin && (
           <div className="print-licenses">
             <span>GSTIN: {settings.gstin}</span>
@@ -57,14 +58,14 @@ export default function PrintTemplate({ data, settings }) {
         <thead>
           <tr>
             <th style={{width: '50px'}}>Sr No</th>
-            <th>Medicine Name</th>
-            <th>Pack</th>
-            <th>Batch</th>
-            <th>Expiry</th>
-            <th>Qty</th>
-            <th>Rate</th>
-            <th>Disc%</th>
-            <th>Amount</th>
+            <th style={{width: '350px'}}>Medicine Name</th>
+            <th style={{width: '60px'}}>Pack</th>
+            <th style={{width: '100px'}}>Batch</th>
+            <th style={{width: '100px'}}>Expiry</th>
+            <th style={{width: '60px'}}>Qty</th>
+            <th style={{width: '80px'}}>Rate</th>
+            <th style={{width: '80px'}}>Discount</th>
+            <th style={{width: '100px'}}>Amount</th>
           </tr>
         </thead>
         <tbody>
@@ -126,7 +127,7 @@ export default function PrintTemplate({ data, settings }) {
           <div className="auth-sign">
             <div className="sign-space"></div>
             <p>Authorized Signatory</p>
-            <p><strong>National Medical Store</strong></p>
+            <p><strong>{settings?.pharmacyName || "National Medical Store"}</strong></p>
           </div>
         </div>
       </div>
