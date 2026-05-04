@@ -39,7 +39,7 @@ export default function Auth() {
   const handleGoogleLogin = async () => {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
-      options: { redirectTo: window.location.origin }
+      options: { redirectTo: 'https://admin.nationalpharmacy.in' }
     });
     if (error) setError(error.message);
   };
