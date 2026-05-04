@@ -59,15 +59,15 @@ export default function PrintTemplate({ data, settings }) {
       <table className="print-main-table">
         <thead>
           <tr>
-            <th style={{width: '50px'}}>Sr No</th>
-            <th style={{width: '350px'}}>Medicine Name</th>
+            <th style={{width: '40px'}}>Sr No</th>
+            <th style={{width: '420px'}}>Medicine Name</th>
             <th style={{width: '60px'}}>Pack</th>
             <th style={{width: '100px'}}>Batch No</th>
             <th style={{width: '100px'}}>Expiry</th>
             <th style={{width: '60px'}}>Qty</th>
-            <th style={{width: '80px'}}>Rate</th>
-            <th style={{width: '60px'}}>DISC%</th>
-            <th style={{width: '100px'}}>Amount</th>
+            <th style={{width: '70px'}}>Rate</th>
+            <th style={{width: '45px'}}>DISC%</th>
+            <th style={{width: '90px'}}>Amount</th>
           </tr>
         </thead>
         <tbody>

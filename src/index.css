@@ -453,7 +453,9 @@ input::placeholder, textarea::placeholder { color: var(--text-3); }
   .print-header {
     text-align: center;
     border: 2px solid #000;
-    padding: 15px;
+    background: #f0f0f0 !important;
+    -webkit-print-color-adjust: exact;
+    padding: 20px 15px;
     margin-bottom: 20px;
   }
 
