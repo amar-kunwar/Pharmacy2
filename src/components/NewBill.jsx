@@ -220,7 +220,7 @@ export default function NewBill({ settings, editingBill, onSave, onPrint, showTo
                 <th>#</th>
                 <th>Medicine Name</th>
                 <th>Pack</th>
-                <th>Batch</th>
+                <th>Batch No</th>
                 <th>Expiry</th>
                 <th>Qty</th>
                 <th>Price</th>

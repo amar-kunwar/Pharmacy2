@@ -20,17 +20,19 @@ function numberToWords(num) {
 export default function PrintTemplate({ data, settings }) {
   if (!data) return null;
 
-  const netAmount = data.grand || 0;
-  const netAmountWords = numberToWords(Math.floor(netAmount));
+  const rawNetAmount = data.grand || 0;
+  const netAmount = Math.round(rawNetAmount);
+  const roundOff = netAmount - rawNetAmount;
+  const netAmountWords = numberToWords(netAmount);
 
   return (
     <div id="print-area" className="print-area">
       <div className="print-type">CASH MEMO / INVOICE</div>
       
       <div className="print-header">
-        <h1>{settings?.pharmacyName || "National Medical Store"}</h1>
+        <h1>National Medical Store</h1>
         <p>DL No. - RLF21DL2024001871, RLF20DL2024001861</p>
-        <p>A block, Thokar No -7, Jamia Nagar, Okhla New Delhi 110025</p>
+        <p>A block, Thokar No -7, Jamia Nagar Okhla New Delhi - Pincode 110025</p>
         <p>Email: nationalmstoreonline@gmail.com | Mobile Number 7303292203</p>
         {settings?.gstin && (
           <div className="print-licenses">
@@ -60,11 +62,11 @@ export default function PrintTemplate({ data, settings }) {
             <th style={{width: '50px'}}>Sr No</th>
             <th style={{width: '350px'}}>Medicine Name</th>
             <th style={{width: '60px'}}>Pack</th>
-            <th style={{width: '100px'}}>Batch</th>
+            <th style={{width: '100px'}}>Batch No</th>
             <th style={{width: '100px'}}>Expiry</th>
             <th style={{width: '60px'}}>Qty</th>
             <th style={{width: '80px'}}>Rate</th>
-            <th style={{width: '80px'}}>Discount</th>
+            <th style={{width: '60px'}}>DISC%</th>
             <th style={{width: '100px'}}>Amount</th>
           </tr>
         </thead>
@@ -103,6 +105,13 @@ export default function PrintTemplate({ data, settings }) {
             <td className="total-label">Discount</td>
             <td className="total-val">-₹{(data.discount || 0).toFixed(2)}</td>
           </tr>
+          {Math.abs(roundOff) > 0.001 && (
+            <tr>
+              <td colSpan="7" className="no-border"></td>
+              <td className="total-label">Round Off</td>
+              <td className="total-val">{roundOff > 0 ? '+' : ''}{roundOff.toFixed(2)}</td>
+            </tr>
+          )}
           <tr>
             <td colSpan="7" className="no-border border-bottom">
               <div className="print-amount-words">
@@ -127,12 +136,12 @@ export default function PrintTemplate({ data, settings }) {
           <div className="auth-sign">
             <div className="sign-space"></div>
             <p>Authorized Signatory</p>
-            <p><strong>{settings?.pharmacyName || "National Medical Store"}</strong></p>
+            <p><strong>National Medical Store</strong></p>
           </div>
         </div>
       </div>
       
-      <div className="print-watermark">Computer Generated Invoice</div>
+      {/* Watermark removed as requested */}
     </div>
   );
 }

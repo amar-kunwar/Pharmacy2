@@ -522,12 +522,12 @@ input::placeholder, textarea::placeholder { color: var(--text-3); }
   .print-main-table td {
     border-left: 1px solid #000;
     border-right: 1px solid #000;
-    padding: 6px 8px;
-    font-size: 12px;
+    padding: 4px 6px;
+    font-size: 11px;
   }
 
   .print-main-table tbody tr {
-    height: 30px;
+    height: 25px;
   }
 
   .print-main-table tbody tr:last-child td {
@@ -538,7 +538,7 @@ input::placeholder, textarea::placeholder { color: var(--text-3); }
   .text-right { text-align: right; }
 
   .empty-row td {
-    height: 30px;
+    height: 25px;
   }
 
   .total-label {
