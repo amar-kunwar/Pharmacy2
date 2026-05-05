@@ -1,6 +1,6 @@
 import React from 'react';
 import { supabase } from '../lib/supabase';
-import { FilePlus, History, Settings, LogOut } from 'lucide-react';
+import { FilePlus, History, Settings, LogOut, Calculator } from 'lucide-react';
 
 export default function Sidebar({ view, setView, collapsed, pharmacyName, userEmail }) {
   const handleLogout = () => supabase.auth.signOut();
@@ -22,6 +22,20 @@ export default function Sidebar({ view, setView, collapsed, pharmacyName, userEm
         >
           <FilePlus size={18} className="nav-icon" />
           <span>New Bill</span>
+        </button>
+        <button 
+          className={`nav-item ${view === 'new-estimate' ? 'active' : ''}`}
+          onClick={() => setView('new-estimate')}
+        >
+          <Calculator size={18} className="nav-icon" />
+          <span>New Estimate</span>
+        </button>
+        <button 
+          className={`nav-item ${view === 'estimate-history' ? 'active' : ''}`}
+          onClick={() => setView('estimate-history')}
+        >
+          <History size={18} className="nav-icon" />
+          <span>Estimate History</span>
         </button>
         <button 
           className={`nav-item ${view === 'history' ? 'active' : ''}`}

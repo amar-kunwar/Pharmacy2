@@ -5,7 +5,9 @@ import Auth from './components/Auth';
 import Sidebar from './components/Sidebar';
 import Header from './components/Header';
 import NewBill from './components/NewBill';
+import NewEstimate from './components/NewEstimate';
 import History from './components/History';
+import EstimateHistory from './components/EstimateHistory';
 import Settings from './components/Settings';
 import Toast from './components/Toast';
 import PrintTemplate from './components/PrintTemplate';
@@ -19,11 +21,14 @@ export default function App() {
     pharmacyName: 'National Medical Store',
     phone: '7303292203',
     address: 'A block, Thokar No -7, Jamia Nagar, Okhla New Delhi 110025',
-    billCounter: 1000
+    billCounter: 1000,
+    estimateCounter: 1000
   });
   const [bills, setBills] = useState([]);
+  const [estimates, setEstimates] = useState([]);
   const [printData, setPrintData] = useState(null);
   const [editingBill, setEditingBill] = useState(null);
+  const [editingEstimate, setEditingEstimate] = useState(null);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -68,7 +73,8 @@ export default function App() {
         gstin: setts.gstin,
         dl: setts.dl,
         defaultGst: setts.default_gst,
-        billCounter: setts.bill_counter
+        billCounter: setts.bill_counter,
+        estimateCounter: setts.estimate_counter || 1000
       });
     } else if (error && error.code === 'PGRST116') {
       const defaults = {
@@ -76,14 +82,16 @@ export default function App() {
         pharmacy_name: 'National Medical Store',
         phone: '7303292203',
         address: 'A block, Thokar No -7, Jamia Nagar, Okhla New Delhi 110025',
-        bill_counter: 1000
+        bill_counter: 1000,
+        estimate_counter: 1000
       };
       await supabase.from('settings').insert(defaults);
       setUserSettings({ 
         pharmacyName: 'National Medical Store', 
         phone: '7303292203',
         address: 'Jamia Nagar Okhla New Delhi',
-        billCounter: 1000 
+        billCounter: 1000,
+        estimateCounter: 1000
       });
     }
 
@@ -95,6 +103,15 @@ export default function App() {
       .order('saved_at', { ascending: false });
 
     setBills(bData || []);
+
+    // Fetch estimates
+    const { data: eData } = await supabase
+      .from('estimates')
+      .select('*')
+      .eq('user_id', session.user.id)
+      .order('saved_at', { ascending: false });
+
+    setEstimates(eData || []);
   }
 
   const handleSaveBill = async (newBill) => {
@@ -142,6 +159,27 @@ export default function App() {
     }, 50);
   };
 
+  const handleSaveEstimate = async (newEstimate) => {
+    if (editingEstimate) {
+      setEstimates(estimates.map(e => e.id === newEstimate.id ? newEstimate : e));
+      setEditingEstimate(null);
+    } else {
+      setEstimates([newEstimate, ...estimates]);
+    }
+    
+    showToast('Estimate saved successfully!', 'success');
+  };
+
+  const handlePrintEstimate = (data) => {
+    setPrintData(null);
+    setTimeout(() => {
+      setPrintData(data);
+      setTimeout(() => {
+        window.print();
+      }, 500);
+    }, 50);
+  };
+
   if (!session) {
     return <Auth />;
   }
@@ -179,6 +217,23 @@ export default function App() {
           )}
         </div>
 
+        <div className={`view ${view === 'new-estimate' ? 'active' : ''}`}>
+          {view === 'new-estimate' && (
+            <NewEstimate 
+              settings={userSettings} 
+              editingEstimate={editingEstimate}
+              onSave={handleSaveEstimate}
+              onPrint={handlePrintEstimate}
+              showToast={showToast}
+              onEstimateCounterUpdate={(count) => setUserSettings({...userSettings, estimateCounter: count})}
+              onCancelEdit={() => {
+                setEditingEstimate(null);
+                setView('history');
+              }}
+            />
+          )}
+        </div>
+
         <div className={`view ${view === 'history' ? 'active' : ''}`}>
           {view === 'history' && (
             <History 
@@ -193,6 +248,23 @@ export default function App() {
                 setEditingBill(bill);
                 setView('new-bill');
               }} 
+            />
+          )}
+        </div>
+
+        <div className={`view ${view === 'estimate-history' ? 'active' : ''}`}>
+          {view === 'estimate-history' && (
+            <EstimateHistory
+              estimates={estimates}
+              onDelete={(id) => {
+                setEstimates(estimates.filter(e => e.id !== id));
+                showToast('Estimate deleted.', 'error');
+              }}
+              onPrint={handlePrintEstimate}
+              onEdit={(estimate) => {
+                setEditingEstimate(estimate);
+                setView('new-estimate');
+              }}
             />
           )}
         </div>

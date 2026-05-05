@@ -20,14 +20,17 @@ function numberToWords(num) {
 export default function PrintTemplate({ data, settings }) {
   if (!data) return null;
 
+  const isEstimate = Boolean(data.estimate_no);
   const rawNetAmount = data.grand || 0;
   const netAmount = Math.round(rawNetAmount);
   const roundOff = netAmount - rawNetAmount;
   const netAmountWords = numberToWords(netAmount);
+  const customerLabel = isEstimate ? 'Customer Name:' : 'Patient Name:';
+  const referenceLabel = isEstimate ? 'Estimate No:' : 'Bill No:';
 
   return (
     <div id="print-area" className="print-area">
-      <div className="print-type">CASH MEMO / INVOICE</div>
+      <div className="print-type">{isEstimate ? 'ESTIMATE' : 'CASH MEMO / INVOICE'}</div>
       
       <div className="print-header">
         <h1>National Medical Store</h1>
@@ -43,16 +46,16 @@ export default function PrintTemplate({ data, settings }) {
 
       <div className="print-meta-grid">
         <div className="meta-left">
-          <div className="meta-row"><strong>Patient Name:</strong> {data.customer}</div>
+          <div className="meta-row"><strong>{customerLabel}</strong> {data.customer}</div>
           {data.phone && <div className="meta-row"><strong>Phone:</strong> {data.phone}</div>}
-          {data.age && <div className="meta-row"><strong>Age/Sex:</strong> {data.age}</div>}
           {data.address && <div className="meta-row"><strong>Address:</strong> {data.address}</div>}
+          {isEstimate && data.sr_no && <div className="meta-row"><strong>Sr No:</strong> {data.sr_no}</div>}
         </div>
         <div className="meta-right">
-          <div className="meta-row"><strong>Bill No:</strong> {data.bill_no}</div>
+          <div className="meta-row"><strong>{referenceLabel}</strong> {isEstimate ? data.estimate_no : data.bill_no}</div>
           <div className="meta-row"><strong>Date:</strong> {new Date(data.date).toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'numeric' })}</div>
-          {data.doctor && <div className="meta-row"><strong>Doctor Name:</strong> {data.doctor}</div>}
-          {data.doctor_address && <div className="meta-row"><strong>Doctor Address:</strong> {data.doctor_address}</div>}
+          {!isEstimate && data.doctor && <div className="meta-row"><strong>Doctor Name:</strong> {data.doctor}</div>}
+          {!isEstimate && data.doctor_address && <div className="meta-row"><strong>Doctor Address:</strong> {data.doctor_address}</div>}
         </div>
       </div>
 
@@ -72,8 +75,10 @@ export default function PrintTemplate({ data, settings }) {
         </thead>
         <tbody>
           {data.items.map((it, i) => {
-            const base = (parseFloat(it.qty) || 0) * (parseFloat(it.price) || 0);
-            const total = base * (1 - (parseFloat(it.disc) || 0) / 100);
+            const itemPrice = parseFloat(it.price ?? it.mrp ?? 0);
+            const itemDisc = parseFloat(it.disc ?? it.disc_percent ?? 0);
+            const base = (parseFloat(it.qty) || 0) * itemPrice;
+            const total = base * (1 - itemDisc / 100);
             return (
               <tr key={i}>
                 <td className="text-center">{i + 1}</td>
@@ -82,8 +87,8 @@ export default function PrintTemplate({ data, settings }) {
                 <td className="text-center">{it.batch || '-'}</td>
                 <td className="text-center">{it.expiry ? new Date(it.expiry).toLocaleDateString('en-IN', { month:'short', year:'2-digit' }) : '-'}</td>
                 <td className="text-center">{it.qty}</td>
-                <td className="text-right">{parseFloat(it.price || 0).toFixed(2)}</td>
-                <td className="text-center">{it.disc || 0}</td>
+                <td className="text-right">{itemPrice.toFixed(2)}</td>
+                <td className="text-center">{itemDisc || 0}</td>
                 <td className="text-right"><strong>{total.toFixed(2)}</strong></td>
               </tr>
             );
