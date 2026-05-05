@@ -39,3 +39,48 @@ create table if not exists bills (
   items jsonb,
   saved_at timestamptz default now()
 );
+
+-- Enable RLS on settings table
+alter table settings enable row level security;
+
+-- Create RLS policies for settings table
+create policy "Users can view their own settings" on settings
+  for select using (auth.uid() = user_id);
+
+create policy "Users can insert their own settings" on settings
+  for insert with check (auth.uid() = user_id);
+
+create policy "Users can update their own settings" on settings
+  for update using (auth.uid() = user_id);
+
+-- Enable RLS on estimates table
+alter table estimates enable row level security;
+
+-- Create RLS policies for estimates table
+create policy "Users can view their own estimates" on estimates
+  for select using (auth.uid() = user_id);
+
+create policy "Users can insert their own estimates" on estimates
+  for insert with check (auth.uid() = user_id);
+
+create policy "Users can update their own estimates" on estimates
+  for update using (auth.uid() = user_id);
+
+create policy "Users can delete their own estimates" on estimates
+  for delete using (auth.uid() = user_id);
+
+-- Enable RLS on bills table
+alter table bills enable row level security;
+
+-- Create RLS policies for bills table
+create policy "Users can view their own bills" on bills
+  for select using (auth.uid() = user_id);
+
+create policy "Users can insert their own bills" on bills
+  for insert with check (auth.uid() = user_id);
+
+create policy "Users can update their own bills" on bills
+  for update using (auth.uid() = user_id);
+
+create policy "Users can delete their own bills" on bills
+  for delete using (auth.uid() = user_id);
