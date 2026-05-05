@@ -25,12 +25,110 @@ export default function PrintTemplate({ data, settings }) {
   const netAmount = Math.round(rawNetAmount);
   const roundOff = netAmount - rawNetAmount;
   const netAmountWords = numberToWords(netAmount);
-  const customerLabel = isEstimate ? 'Customer Name:' : 'Patient Name:';
-  const referenceLabel = isEstimate ? 'Estimate No:' : 'Bill No:';
+
+  // Separate rendering for Estimate vs Bill
+  if (isEstimate) {
+    return (
+      <div id="print-area" className="print-area">
+        <div className="print-type">ESTIMATE</div>
+        
+        <div className="print-header">
+          <h1>National Medical Store</h1>
+          <p>A block, Thokar No -7, Jamia Nagar Okhla New Delhi - Pincode 110025</p>
+          <p>Email: nationalmstoreonline@gmail.com | Mobile Number 7303292203</p>
+        </div>
+
+        <div className="print-meta-grid">
+          <div className="meta-left">
+            <div className="meta-row"><strong>Customer Name:</strong> {data.customer}</div>
+            {data.phone && <div className="meta-row"><strong>Phone:</strong> {data.phone}</div>}
+            {data.sr_no && <div className="meta-row"><strong>Sr No:</strong> {data.sr_no}</div>}
+          </div>
+          <div className="meta-right">
+            <div className="meta-row"><strong>Estimate No:</strong> {data.estimate_no}</div>
+            <div className="meta-row"><strong>Date:</strong> {new Date(data.date).toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'numeric' })}</div>
+          </div>
+        </div>
+
+        <table className="print-main-table">
+          <thead>
+            <tr>
+              <th style={{width: '40px'}}>Sr No</th>
+              <th style={{width: '300px'}}>Medicine Name</th>
+              <th style={{width: '80px'}}>Pack</th>
+              <th style={{width: '60px'}}>Qty</th>
+              <th style={{width: '70px'}}>Rate</th>
+              <th style={{width: '70px'}}>DISC%</th>
+              <th style={{width: '90px'}}>Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.items.map((it, i) => {
+              const itemPrice = parseFloat(it.price ?? it.mrp ?? 0);
+              const itemDisc = parseFloat(it.disc ?? it.disc_percent ?? 0);
+              const base = (parseFloat(it.qty) || 0) * itemPrice;
+              const total = base * (1 - itemDisc / 100);
+              return (
+                <tr key={i}>
+                  <td className="text-center">{i + 1}</td>
+                  <td><strong>{it.name}</strong></td>
+                  <td className="text-center">{it.pack || '-'}</td>
+                  <td className="text-center">{it.qty}</td>
+                  <td className="text-right">{itemPrice.toFixed(2)}</td>
+                  <td className="text-center">{itemDisc || 0}</td>
+                  <td className="text-right"><strong>{total.toFixed(2)}</strong></td>
+                </tr>
+              );
+            })}
+            {[...Array(Math.max(0, 8 - data.items.length))].map((_, i) => (
+              <tr key={`empty-${i}`} className="empty-row">
+                <td>&nbsp;</td><td></td><td></td><td></td><td></td><td></td><td></td>
+              </tr>
+            ))}
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colSpan="5" className="no-border"></td>
+              <td className="total-label">Subtotal</td>
+              <td className="total-val">₹{(data.subtotal || 0).toFixed(2)}</td>
+            </tr>
+            <tr>
+              <td colSpan="5" className="no-border"></td>
+              <td className="total-label">Discount</td>
+              <td className="total-val">-₹{(data.discount || 0).toFixed(2)}</td>
+            </tr>
+            <tr>
+              <td colSpan="5" className="no-border border-bottom">
+                <div className="print-amount-words">
+                  <strong>Amount in words: </strong> Rupees {netAmountWords}
+                </div>
+              </td>
+              <td className="total-label grand">Net Amount</td>
+              <td className="total-val grand">₹{netAmount.toFixed(2)}</td>
+            </tr>
+          </tfoot>
+        </table>
+
+        <div className="print-footer-section">
+          <div className="footer-right">
+            <div className="auth-sign">
+              <div className="sign-space"></div>
+              <p>Authorized Signatory</p>
+              <p><strong>National Medical Store</strong></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Bill Template
+  const customerLabel = 'Patient Name:';
+  const referenceLabel = 'Bill No:';
 
   return (
     <div id="print-area" className="print-area">
-      <div className="print-type">{isEstimate ? 'ESTIMATE' : 'CASH MEMO / INVOICE'}</div>
+      <div className="print-type">CASH MEMO / INVOICE</div>
       
       <div className="print-header">
         <h1>National Medical Store</h1>
@@ -49,13 +147,12 @@ export default function PrintTemplate({ data, settings }) {
           <div className="meta-row"><strong>{customerLabel}</strong> {data.customer}</div>
           {data.phone && <div className="meta-row"><strong>Phone:</strong> {data.phone}</div>}
           {data.address && <div className="meta-row"><strong>Address:</strong> {data.address}</div>}
-          {isEstimate && data.sr_no && <div className="meta-row"><strong>Sr No:</strong> {data.sr_no}</div>}
         </div>
         <div className="meta-right">
-          <div className="meta-row"><strong>{referenceLabel}</strong> {isEstimate ? data.estimate_no : data.bill_no}</div>
+          <div className="meta-row"><strong>{referenceLabel}</strong> {data.bill_no}</div>
           <div className="meta-row"><strong>Date:</strong> {new Date(data.date).toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'numeric' })}</div>
-          {!isEstimate && data.doctor && <div className="meta-row"><strong>Doctor Name:</strong> {data.doctor}</div>}
-          {!isEstimate && data.doctor_address && <div className="meta-row"><strong>Doctor Address:</strong> {data.doctor_address}</div>}
+          {data.doctor && <div className="meta-row"><strong>Doctor Name:</strong> {data.doctor}</div>}
+          {data.doctor_address && <div className="meta-row"><strong>Doctor Address:</strong> {data.doctor_address}</div>}
         </div>
       </div>
 
