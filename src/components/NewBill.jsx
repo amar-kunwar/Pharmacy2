@@ -101,6 +101,8 @@ export default function NewBill({ settings, editingBill, onSave, onPrint, showTo
   };
 
   const onSaveClick = async () => {
+    const validItems = items.filter(it => it.name.trim() !== '');
+    if (!billData.customer && validItems.length === 0) return showToast('Please enter Patient name or medicines name', 'error');
     const shouldPrint = confirm('Do you want to print this bill?');
     await handleSave(shouldPrint);
   };

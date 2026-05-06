@@ -24,6 +24,13 @@ export default function Sidebar({ view, setView, collapsed, pharmacyName, userEm
           <span>New Bill</span>
         </button>
         <button 
+          className={`nav-item ${view === 'history' ? 'active' : ''}`}
+          onClick={() => setView('history')}
+        >
+          <History size={18} className="nav-icon" />
+          <span>Bill History</span>
+        </button>
+        <button 
           className={`nav-item ${view === 'new-estimate' ? 'active' : ''}`}
           onClick={() => setView('new-estimate')}
         >
@@ -36,13 +43,6 @@ export default function Sidebar({ view, setView, collapsed, pharmacyName, userEm
         >
           <History size={18} className="nav-icon" />
           <span>Estimate History</span>
-        </button>
-        <button 
-          className={`nav-item ${view === 'history' ? 'active' : ''}`}
-          onClick={() => setView('history')}
-        >
-          <History size={18} className="nav-icon" />
-          <span>Bill History</span>
         </button>
         <button 
           className={`nav-item ${view === 'settings' ? 'active' : ''}`}

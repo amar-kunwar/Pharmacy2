@@ -94,6 +94,8 @@ export default function NewEstimate({ settings, editingEstimate, onSave, onPrint
   };
 
   const onSaveClick = async () => {
+    const validItems = items.filter(it => it.name.trim() !== '');
+    if (!estimateData.customer && validItems.length === 0) return showToast('Please enter customer name or medicines name', 'error');
     const shouldPrint = confirm('Do you want to print this estimate?');
     await handleSave(shouldPrint);
   };
