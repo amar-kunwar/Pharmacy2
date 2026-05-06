@@ -9,6 +9,7 @@ import NewEstimate from './components/NewEstimate';
 import History from './components/History';
 import EstimateHistory from './components/EstimateHistory';
 import Settings from './components/Settings';
+import ManageExpiry from './components/ManageExpiry';
 import Toast from './components/Toast';
 import PrintTemplate from './components/PrintTemplate';
 
@@ -280,6 +281,11 @@ export default function App() {
               showToast={showToast}
               onClearAll={() => setBills([])}
             />
+          )}
+        </div>
+        <div className={`view ${view === 'manage-expiry' ? 'active' : ''}`}>
+          {view === 'manage-expiry' && (
+            <ManageExpiry showToast={showToast} />
           )}
         </div>
       </main>
