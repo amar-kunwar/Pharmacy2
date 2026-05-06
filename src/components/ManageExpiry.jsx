@@ -82,6 +82,25 @@ export default function ManageExpiry({ showToast }) {
     loadSaved();
   };
 
+  const exportToCSV = () => {
+    if (!saved || saved.length === 0) return showToast('No records to export', 'error');
+    const headers = ['Date', 'Medicine', 'Pack', 'Qty', 'Expiry', 'Batch', 'MRP'];
+    const rows = saved.map(r => [r.date ? r.date.split('T')[0] : '', r.medicine_name || '', r.pack || '', r.qty || '', r.expiry || '', r.batch || '', r.mrp || '']);
+    const csv = [headers, ...rows].map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(',')).join('\n');
+    // Add BOM for Excel compatibility
+    const csvWithBom = '\uFEFF' + csv;
+    const blob = new Blob([csvWithBom], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `expiry-export-${new Date().toISOString().slice(0,10)}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+    showToast('Export started', 'info');
+  };
+
   return (
     <div className="manage-expiry-view">
       <div className="card">
@@ -148,6 +167,9 @@ export default function ManageExpiry({ showToast }) {
 
         <div className="card" style={{marginTop:16}}>
           <div className="card-header"><h3>Saved Expiry Items</h3></div>
+          <div style={{display:'flex', justifyContent:'flex-end', gap:8, padding:'8px 12px 0 12px'}}>
+            <button className="btn btn-outline" onClick={exportToCSV}>Export (Excel)</button>
+          </div>
           <div className="table-wrapper">
             <table className="items-table">
               <thead>
