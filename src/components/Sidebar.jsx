@@ -52,6 +52,13 @@ export default function Sidebar({ view, setView, collapsed, pharmacyName, userEm
           <span>Manage Expiry</span>
         </button>
         <button 
+          className={`nav-item ${view === 'distributors' ? 'active' : ''}`}
+          onClick={() => setView('distributors')}
+        >
+          <History size={18} className="nav-icon" />
+          <span>Distributors</span>
+        </button>
+        <button 
           className={`nav-item ${view === 'settings' ? 'active' : ''}`}
           onClick={() => setView('settings')}
         >

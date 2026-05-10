@@ -12,6 +12,7 @@ import Settings from './components/Settings';
 import ManageExpiry from './components/ManageExpiry';
 import Toast from './components/Toast';
 import PrintTemplate from './components/PrintTemplate';
+import Distributors from './components/Distributors';
 
 export default function App() {
   const [session, setSession] = useState(null);
@@ -286,6 +287,11 @@ export default function App() {
         <div className={`view ${view === 'manage-expiry' ? 'active' : ''}`}>
           {view === 'manage-expiry' && (
             <ManageExpiry showToast={showToast} />
+          )}
+        </div>
+        <div className={`view ${view === 'distributors' ? 'active' : ''}`}>
+          {view === 'distributors' && (
+            <Distributors showToast={showToast} />
           )}
         </div>
       </main>
