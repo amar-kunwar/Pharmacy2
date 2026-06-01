@@ -74,7 +74,13 @@ input, textarea, select { font-family: var(--font); }
 .logo-name { font-size: 1.15rem; font-weight: 700; color: var(--text-1); display: block; }
 .logo-tagline { font-size: 0.72rem; color: var(--text-2); display: block; }
 
-.sidebar-nav { flex: 1; padding: 20px 12px; display: flex; flex-direction: column; gap: 6px; }
+.sidebar-nav { flex: 1; padding: 20px 12px; display: flex; flex-direction: column; gap: 6px; overflow-y: auto; padding-right: 10px; }
+
+/* Subtle scrollbar for the sidebar nav only */
+.sidebar-nav::-webkit-scrollbar { width: 8px; }
+.sidebar-nav::-webkit-scrollbar-track { background: transparent; }
+.sidebar-nav::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.06); border-radius: 8px; }
+.sidebar-nav { scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.06) transparent; }
 
 .nav-item {
   display: flex; align-items: center; gap: 12px;
