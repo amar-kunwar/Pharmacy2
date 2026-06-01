@@ -74,7 +74,7 @@ input, textarea, select { font-family: var(--font); }
 .logo-name { font-size: 1.15rem; font-weight: 700; color: var(--text-1); display: block; }
 .logo-tagline { font-size: 0.72rem; color: var(--text-2); display: block; }
 
-.sidebar-nav { flex: 1; padding: 20px 12px; display: flex; flex-direction: column; gap: 6px; }
+.sidebar-nav { flex: 1; padding: 20px 12px; display: flex; flex-direction: column; gap: 6px; overflow-y: auto; }
 
 .nav-item {
   display: flex; align-items: center; gap: 12px;
