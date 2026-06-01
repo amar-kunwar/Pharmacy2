@@ -311,7 +311,10 @@ export default function ManageExpiry({ showToast }) {
                       <td>{row.medicine_name}</td>
                       <td>{row.pack}</td>
                       <td>{row.qty}</td>
-                      <td>{row.expiry ? row.expiry.replace('-', '/') : ''}</td>
+                      <td>{row.expiry ? (() => {
+                        const [y, m] = row.expiry.split('-');
+                        return m ? `${m}/${y}` : row.expiry;
+                      })() : ''}</td>
                       <td>{row.batch}</td>
                       <td>₹{(row.mrp || 0).toFixed(2)}</td>
                       <td>{dist ? dist.name : '-'}</td>

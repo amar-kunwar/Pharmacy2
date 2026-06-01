@@ -10,7 +10,6 @@ export default function NewEstimate({ settings, editingEstimate, onSave, onPrint
     date: new Date().toISOString().split('T')[0],
     customer: '',
     phone: '',
-    sr_no: '',
   });
 
   const [items, setItems] = useState([
@@ -24,11 +23,10 @@ export default function NewEstimate({ settings, editingEstimate, onSave, onPrint
         date: editingEstimate.date,
         customer: editingEstimate.customer,
         phone: editingEstimate.phone,
-        sr_no: editingEstimate.sr_no,
       });
       setItems(editingEstimate.items.map((it, idx) => ({ ...it, id: it.id || Date.now() + Math.random(), sr_no: idx + 1 })));
     } else if (settings) {
-      setEstimateData(prev => ({ ...prev, estimate_no: `EST-${settings.estimateCounter + 1}`, sr_no: `SR-${settings.estimateCounter + 1}` }));
+      setEstimateData(prev => ({ ...prev, estimate_no: `EST-${settings.estimateCounter + 1}` }));
     }
   }, [settings, editingEstimate]);
 
@@ -95,7 +93,8 @@ export default function NewEstimate({ settings, editingEstimate, onSave, onPrint
 
   const onSaveClick = async () => {
     const validItems = items.filter(it => it.name.trim() !== '');
-    if (!estimateData.customer && validItems.length === 0) return showToast('Please enter customer name or medicines name', 'error');
+    if (!estimateData.customer) return showToast('Please enter customer name', 'error');
+    if (validItems.length === 0) return showToast('Add at least one medicine', 'error');
     const shouldPrint = confirm('Do you want to print this estimate?');
     await handleSave(shouldPrint);
   };
@@ -108,7 +107,6 @@ export default function NewEstimate({ settings, editingEstimate, onSave, onPrint
     setEstimateData({
       ...estimateData,
       estimate_no: `EST-${settings.estimateCounter + 2}`,
-      sr_no: `SR-${settings.estimateCounter + 2}`,
       customer: '',
       phone: '',
     });
@@ -131,14 +129,6 @@ export default function NewEstimate({ settings, editingEstimate, onSave, onPrint
           <h2>Customer Details</h2>
         </div>
         <div className="form-grid">
-          <div className="form-group">
-            <label>Sr No</label>
-            <input
-              type="text"
-              value={estimateData.sr_no}
-              onChange={(e) => setEstimateData({...estimateData, sr_no: e.target.value})}
-            />
-          </div>
           <div className="form-group">
             <label>Estimate Number</label>
             <input

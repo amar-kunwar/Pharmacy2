@@ -12,6 +12,8 @@ import Settings from './components/Settings';
 import ManageExpiry from './components/ManageExpiry';
 import Toast from './components/Toast';
 import PrintTemplate from './components/PrintTemplate';
+import ListMedicines from './components/ListMedicines';
+import AddMedicine from './components/AddMedicine';
 import Distributors from './components/Distributors';
 
 export default function App() {
@@ -26,11 +28,13 @@ export default function App() {
     billCounter: 1000,
     estimateCounter: 1000
   });
-  const [bills, setBills] = useState([]);
-  const [estimates, setEstimates] = useState([]);
+  const [editMedicine, setEditMedicine] = useState(null);
+  const [editingMedicineId, setEditingMedicineId] = useState(null);
   const [printData, setPrintData] = useState(null);
   const [editingBill, setEditingBill] = useState(null);
   const [editingEstimate, setEditingEstimate] = useState(null);
+  const [bills, setBills] = useState([]);
+  const [estimates, setEstimates] = useState([]);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -294,6 +298,28 @@ export default function App() {
             <Distributors showToast={showToast} />
           )}
         </div>
+          <div className={`view ${view === 'list-medicines' ? 'active' : ''}`}>
+            {view === 'list-medicines' && (
+              <ListMedicines
+                session={session}
+                showToast={showToast}
+                setView={setView}
+                setEditMedicine={setEditMedicine}
+                setEditingId={setEditingMedicineId}
+              />
+            )}
+          </div>
+          <div className={`view ${view === 'add-medicines' ? 'active' : ''}`}>
+            {view === 'add-medicines' && (
+              <AddMedicine
+                session={session}
+                showToast={showToast}
+                editMedicine={editMedicine}
+                editingId={editingMedicineId}
+                clearEdit={() => { setEditMedicine(null); setEditingMedicineId(null); }}
+              />
+            )}
+          </div>
       </main>
 
       <Toast {...toast} />

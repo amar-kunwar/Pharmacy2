@@ -84,3 +84,41 @@ create policy "Users can update their own bills" on bills
 
 create policy "Users can delete their own bills" on bills
   for delete using (auth.uid() = user_id);
+
+-- Create medicines master table
+create table if not exists medicines (
+  id uuid default uuid_generate_v4() primary key,
+  user_id uuid references auth.users(id),
+  name text not null,
+  generic_name text,
+  manufacturer text,
+  batch_no text,
+  expiry_date date,
+  purchase_price numeric,
+  selling_price numeric,
+  quantity integer default 0,
+  pack text,
+  size text,
+  scheme text,
+  rack_number text,
+  distributor_name text,
+  purchase_date date,
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+
+-- Enable RLS on medicines table
+alter table medicines enable row level security;
+
+-- RLS policies for medicines
+create policy "Users can view their own medicines" on medicines
+  for select using (auth.uid() = user_id);
+
+create policy "Users can insert their own medicines" on medicines
+  for insert with check (auth.uid() = user_id);
+
+create policy "Users can update their own medicines" on medicines
+  for update using (auth.uid() = user_id);
+
+create policy "Users can delete their own medicines" on medicines
+  for delete using (auth.uid() = user_id);

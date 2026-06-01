@@ -102,7 +102,8 @@ export default function NewBill({ settings, editingBill, onSave, onPrint, showTo
 
   const onSaveClick = async () => {
     const validItems = items.filter(it => it.name.trim() !== '');
-    if (!billData.customer && validItems.length === 0) return showToast('Please enter Patient name or medicines name', 'error');
+    if (!billData.customer) return showToast('Please enter Patient name', 'error');
+    if (validItems.length === 0) return showToast('Add at least one medicine', 'error');
     const shouldPrint = confirm('Do you want to print this bill?');
     await handleSave(shouldPrint);
   };
@@ -244,7 +245,7 @@ export default function NewBill({ settings, editingBill, onSave, onPrint, showTo
                       </select>
                     </td>
                     <td><input type="text" value={it.batch} onChange={(e) => updateItem(it.id, 'batch', e.target.value)} style={{width:'80px'}} /></td>
-                    <td><input type="date" value={it.expiry} onChange={(e) => updateItem(it.id, 'expiry', e.target.value)} /></td>
+                    <td><input type="month" value={it.expiry} onChange={(e) => updateItem(it.id, 'expiry', e.target.value)} /></td>
                     <td><input type="number" value={it.qty} onChange={(e) => updateItem(it.id, 'qty', e.target.value)} style={{width:'50px'}} /></td>
                     <td><input type="number" value={it.price} onChange={(e) => updateItem(it.id, 'price', e.target.value)} style={{width:'80px'}} /></td>
                     <td><input type="number" value={it.disc} onChange={(e) => updateItem(it.id, 'disc', e.target.value)} style={{width:'50px'}} /></td>

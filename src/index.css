@@ -95,6 +95,31 @@ input, textarea, select { font-family: var(--font); }
 }
 .nav-icon { font-size: 1.1rem; width: 22px; text-align: center; }
 
+/* Submenu Styles */
+.nav-group { margin-bottom: 2px; }
+.nav-group-title {
+  display: flex; align-items: center; gap: 12px;
+  padding: 11px 14px;
+  border-radius: var(--radius-sm);
+  border: none; background: transparent;
+  color: var(--text-2);
+  font-size: 0.92rem; font-weight: 600;
+  transition: all var(--transition);
+  width: 100%; text-align: left;
+  cursor: pointer;
+}
+.nav-group-title:hover { background: var(--bg-card-hover); color: var(--text-1); }
+.nav-group-title .chevron { margin-left: auto; transition: transform 0.2s; }
+.nav-submenu {
+  display: flex; flex-direction: column; gap: 4px;
+  padding-left: 34px;
+  margin-top: 4px;
+  margin-bottom: 8px;
+}
+.nav-submenu .nav-item {
+  padding: 8px 12px;
+  font-size: 0.86rem;
+}
 .sidebar-footer {
   padding: 16px 20px;
   border-top: 1px solid var(--border);

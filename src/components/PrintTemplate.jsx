@@ -42,7 +42,6 @@ export default function PrintTemplate({ data, settings }) {
           <div className="meta-left">
             <div className="meta-row"><strong>Customer Name:</strong> {data.customer}</div>
             {data.phone && <div className="meta-row"><strong>Phone:</strong> {data.phone}</div>}
-            {data.sr_no && <div className="meta-row"><strong>Sr No:</strong> {data.sr_no}</div>}
           </div>
           <div className="meta-right">
             <div className="meta-row"><strong>Estimate No:</strong> {data.estimate_no}</div>
