@@ -74,16 +74,7 @@ input, textarea, select { font-family: var(--font); }
 .logo-name { font-size: 1.15rem; font-weight: 700; color: var(--text-1); display: block; }
 .logo-tagline { font-size: 0.72rem; color: var(--text-2); display: block; }
 
-.sidebar-nav { flex: 1; padding: 20px 12px; display: flex; flex-direction: column; gap: 6px; overflow-y: auto; padding-right: 8px; }
-
-/* Make the sidebar footer stick to bottom so nav can scroll independently */
-.sidebar-footer { position: sticky; bottom: 0; z-index: 10; background: linear-gradient(180deg, rgba(26,29,53,0.0), rgba(26,29,53,0.6)); }
-
-/* Visible scrollbar styling specifically for sidebar nav */
-.sidebar-nav::-webkit-scrollbar { width: 10px; }
-.sidebar-nav::-webkit-scrollbar-track { background: transparent; }
-.sidebar-nav::-webkit-scrollbar-thumb { background: rgba(108,99,255,0.22); border-radius: 99px; border: 2px solid transparent; background-clip: padding-box; }
-.sidebar-nav { scrollbar-width: thin; scrollbar-color: rgba(108,99,255,0.22) transparent; }
+.sidebar-nav { flex: 1; padding: 20px 12px; display: flex; flex-direction: column; gap: 6px; }
 
 .nav-item {
   display: flex; align-items: center; gap: 12px;
